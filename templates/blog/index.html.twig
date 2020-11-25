@@ -1,0 +1,107 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Blog Symfony | Liste des articles
+{% endblock %}
+
+{% block body %}
+
+	<h1 class="display-4 text-center my-4">
+		Musique Maestro ! Elle accompagne notre vie, souligne nos souvenirs, s'invite dans notre intimité..
+	</h1>
+
+	<div class="row">
+		<div class="col-md-4">
+			<div class="card mb-4 box-shadow">
+				<img src="https://picsum.photos/200/300?random=1">
+				<div class="card-body">
+					<p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+					<div class="d-flex justify-content-between align-items-center">
+						<div class="btn-group">
+							<a href="" alt"" class="btn btn-dark">Voir plus</a>
+						</div>
+						<small class="text-muted">9 mins</small>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-md-4">
+			<div class="card mb-4 box-shadow">
+				<img src="https://picsum.photos/200/300?random=2">
+				<div class="card-body">
+					<p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+					<div class="d-flex justify-content-between align-items-center">
+						<div class="btn-group">
+							<a href="{{path('blog_show')}}" alt"" class="btn btn-dark">Voir plus</a>
+						</div>
+						<small class="text-muted">9 mins</small>
+					</div>
+				</div>
+			</div>
+		</div> 
+
+		<div class="col-md-4">
+			<div class="card mb-4 box-shadow">
+				<img src="https://picsum.photos/200/300?random=3">
+				<div class="card-body">
+					<p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+					<div class="d-flex justify-content-between align-items-center">
+						<div class="btn-group">
+							<a href="{{path('blog_show')}}" alt"" class="btn btn-dark">Voir plus</a>
+						</div>
+						<small class="text-muted">9 mins</small>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-md-4">
+			<div class="card mb-4 box-shadow">
+				<img src="https://picsum.photos/200/300?random=4">
+				<div class="card-body">
+					<p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+					<div class="d-flex justify-content-between align-items-center">
+						<div class="btn-group">
+							<a href="{{path('blog_show')}}" alt"" class="btn btn-dark">Voir plus</a>
+						</div>
+						<small class="text-muted">9 mins</small>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-md-4">
+			<div class="card mb-4 box-shadow">
+				<img src="https://picsum.photos/200/300?random=5">
+				<div class="card-body">
+					<p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+					<div class="d-flex justify-content-between align-items-center">
+						<div class="btn-group">
+							<a href="{{path('blog_show')}}" alt"" class="btn btn-dark">Voir plus</a>
+						</div>
+						<small class="text-muted">9 mins</small>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-md-4">
+			<div class="card mb-4 box-shadow">
+				<img src="https://picsum.photos/200/300?random=6">
+				<div class="card-body">
+					<p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+					<div class="d-flex justify-content-between align-items-center">
+						<div class="btn-group">
+							<button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+							<button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+						</div>
+						<small class="text-muted">9 mins</small>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+
+{% endblock %}
