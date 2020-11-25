@@ -2,13 +2,17 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Entity\Article;
+use App\Repository\ArticleRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class BlogController extends AbstractController
 {
-    
+
 
     // Chaque méthode du controller est associé a une route bien spécifique.
     // Lorsque nous envoyons la route '/blog' dans l'URL du navigateur,
@@ -18,11 +22,19 @@ class BlogController extends AbstractController
     /**
      * @Route("/blog", name="blog")
      */
-    public function index(): Response
+    public function index(ArticleRepository $repo): Response
     {
-        return $this->render('blog/index.html.twig', [
-            'controller_name' => 'BlogController',
-        ]);
+        // $repo = $this->getDoctrine()->getRepository(Article::class); // Injection de dépendance dans public function index()
+        $articles = $repo->findAll();
+        // // dump($articles);
+
+
+        return $this->render(
+            'blog/index.html.twig',
+            [
+                'articles' => $articles
+            ]
+        );
     }
 
     /**
@@ -32,19 +44,57 @@ class BlogController extends AbstractController
 
     public function home(): Response
     {
-        return $this->render('blog/home.html.twig',[
-            'title'=>'Bienvenue sur mon blog Symfony',
-            'age' => 30
-        ]);
+        return $this->render(
+            'blog/home.html.twig',
+            [
+                'title' => 'Bienvenue sur mon blog Symfony',
+                'age' => 30
+            ]
+        );
+    }
+    /**
+     * @Route("/blog/new", name = "blog_create")
+     */
+
+    public function create(Request $request, EntityManagerInterface $manager)
+    {
+        dump($request);
+
+        if ($request->request->count()>0) 
+        {
+            $article = new Article;
+
+            $article->setTitle($request->request->get('title'))
+                    ->setContent($request->request->get('content'))
+                    ->setImage($request->request->get('image'))
+                    ->setCreatedAt(new \DateTime());
+            $manager->persist($article);
+            $manager->flush();
+            return $this->redirectToRoute('blog_show', [
+                'id'=> $article->getId()
+            ]);
+
+        }
+
+        return $this->render('blog/create.html.twig');
     }
 
     /**
-     * @Route("/blog/12", name = "blog_show")
+     * @Route("/blog/{id}", name = "blog_show")
      *  
      */
 
-    public function show(): Response
+    public function show(Article $article): Response
     {
-        return $this->render('blog/show.html.twig');
+        // $repo = $this->getDoctrine()->getRepository(Article::class); // Injection de dépendance dans public function index() + $id 
+        // $article = $repo->find($id);
+        // // dump($article);
+
+        return $this->render(
+            'blog/show.html.twig',
+            [
+                'article' => $article
+            ]
+        );
     }
 }

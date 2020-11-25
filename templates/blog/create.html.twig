@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+
+	<h1 class="display-4 text-center">Création d'un article</h1>
+
+	<form method="post" class="col-md-12">
+		<div class="form-group">
+			<label for="exampleInputEmail1">Entrer un Titre</label>
+			<input type="text" name="title" class="form-control" id="title">
+
+		</div>
+		<div class="form-group">
+			<label for="content">Contenue de l'article</label>
+			<textarea class="form-control" name="content" id="content" rows="3"></textarea>
+		</div>
+		<div class="form-group">
+			<label for="image">Image</label>
+			<input type="text" name="image" class="form-control" id="image">
+		</div>
+		<button type="submit" class="btn btn-primary">Submit</button>
+	</form>
+{% endblock %}
