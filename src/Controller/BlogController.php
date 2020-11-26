@@ -8,6 +8,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class BlogController extends AbstractController
@@ -54,29 +56,57 @@ class BlogController extends AbstractController
     }
     /**
      * @Route("/blog/new", name = "blog_create")
+     * @Route("/blog/{id}/edit", name="blog_edit")
      */
 
-    public function create(Request $request, EntityManagerInterface $manager)
+    public function form(Article $article = null, Request $request, EntityManagerInterface $manager)
     {
+            if (!$article) 
+            {                
+                $article = new Article;
+
+                // Ajout Automatique d'un texte dans les input
+
+                $article ->setTitle("Le passage de Lorem Ipsum standard, utilisé depuis 1500")
+                         ->setContent("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.")
+                         ->setImage("https://picsum.photos/200/300?random=1");
+
+            }
+
+
+
+        // $form = $this->createFormBuilder($article)
+        //              ->add('title')
+        //              ->add('content')
+        //              ->add('image')
+        //              ->getForm();
+
+        $form= $this->createForm(ArticleType::class, $article);
+        $form->handleRequest($request);
         dump($request);
 
-        if ($request->request->count()>0) 
+        if ($form->isSubmitted() && $form->isValid()) 
         {
-            $article = new Article;
-
-            $article->setTitle($request->request->get('title'))
-                    ->setContent($request->request->get('content'))
-                    ->setImage($request->request->get('image'))
-                    ->setCreatedAt(new \DateTime());
+            if (!$article->getId()) 
+            {
+                
+                $article->setCreatedAt(new \dateTime());
+            }
+            
             $manager->persist($article);
             $manager->flush();
-            return $this->redirectToRoute('blog_show', [
-                'id'=> $article->getId()
-            ]);
 
+            return $this->redirectToRoute('blog_show', 
+            [
+                         'id'=> $article->getId()
+            ]);
         }
 
-        return $this->render('blog/create.html.twig');
+        return $this->render('blog/create.html.twig', 
+        [
+            'formArticle' => $form->createView(),
+            'editMode' => $article->getId() !==null
+        ]);
     }
 
     /**
