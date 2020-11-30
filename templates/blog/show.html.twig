@@ -24,11 +24,56 @@
 					{{ article.createdAt|date('d/m/y') }}
 					à
 					{{ article.createdAt|date('H:i:s') }}
+					dans la catégorie
+					{{ article.category.title}}
+
 				</small>
-				<small><a href="{{path('blog_edit', {'id':article.id})}}" class="btn btn-dark ml-2 mb-2">EDIT</a></small>
+				<br>
+				<small>
+					<a href="{{path('blog_edit', {'id':article.id})}}" class="btn btn-dark ml-2 mb-2">EDIT</a>
+				</small>
+				<hr>
 			</div>
 		</div>
 	</div>
 
+
+	<h4 class="mt-5 mb-3">Donner votre avis...
+	</h4>
+	{% for message in app.flashes('success') %}
+		<div class="col-md-7 bg success p-2 rounded mx-auto text-center">
+			{{message}}
+		</div>
+	{% endfor %}
+
+	{{ form_start(formComment) }}
+		{{ form_row(formComment.author, {'label':"Nom d'utilisateur"}) }}
+		{{ form_row(formComment.content, {'label':"Saisir votre commentaire"}) }}
+		<button type="submit" class="btn btn-dark">Poster le commentaire</button>
+	{{ form_end(formComment) }}
+
+
+	<h4 class="mt-5 mb-3">Vos réactions...</h4>
+	<div class="row mb-5">
+		{% for data  in article.comments %}
+
+			<div class="col-md-4 py-2">
+				<span>
+					<strong>{{ data.author }}</strong>
+				</span>
+				<small class="font-italic">Posté le
+					{{ data.createdAt |date('d/m/Y') }}
+					à
+					{{ data.createdAt |date('H:i:s') }}
+				</small>
+			</div>
+			<div class="col-md-8 border py-2">
+				{{ data.content |striptags }}
+
+			</div>
+
+
+		{% endfor %}
+	</div>
 
 {% endblock %}
