@@ -8,7 +8,7 @@
 	<h1 class="display-4 text-center my-4">Identifiez-vous</h1>
 
     {% if error %}
-        <p class="bg-danger text-white text-center p-3 col-md-4 mx-auto rounded"> {{ error.messageKey |trans(error.messageData, 'security') }} </p>
+        <p class="bg-danger text-white text-center p-3 col-md-3 mx-auto rounded"> {{ error.messageKey |trans(error.messageData, 'security') }} </p>
     {% endif %}
 
 	<form class="mx-auto col-md-5" method="post" action="{{ path('security_login') }}" >
