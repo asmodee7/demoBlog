@@ -4,13 +4,13 @@
 {% endblock %}
 
 {% block body %}
-
+<div class="container">
 	<h1 class="display-4 text-center my-1">{{article.title}}</h1>
 
 
 	<div class="col-md-12">
 		<div class="card mb-4 shadow-sm">
-			<img src="{{article.image|replace ({'200/300':'1000/300'})}}">
+			<img src="{{article.image|replace ({'640/480':'1000/300'})}}">
 			<br>
 			<h5 class="text-center">
 				<i>{{article.title}}</i>
@@ -29,33 +29,34 @@
 
 				</small>
 				<br>
-				<small>
-					<a href="{{path('blog_edit', {'id':article.id})}}" class="btn btn-dark ml-2 mb-2">EDIT</a>
-				</small>
+				{% if is_granted('ROLE_ADMIN') %}
+					<small>
+						<a href="{{path('blog_edit', {'id':article.id})}}" class="btn btn-dark ml-2 mb-2">EDIT</a>
+					</small>
+				{% endif %}
 				<hr>
 			</div>
 		</div>
 	</div>
 
+	{% if is_granted('ROLE_USER') %}
+		<h4 class="mt-5 mb-3">Donner votre avis...</h4>
+		{% for message in app.flashes('success') %}
+			<div class="col-md-7 bg success p-2 rounded mx-auto text-center">
+				{{message}}
+			</div>
+		{% endfor %}
 
-	<h4 class="mt-5 mb-3">Donner votre avis...
-	</h4>
-	{% for message in app.flashes('success') %}
-		<div class="col-md-7 bg success p-2 rounded mx-auto text-center">
-			{{message}}
-		</div>
-	{% endfor %}
-
-	{{ form_start(formComment) }}
-		{{ form_row(formComment.author, {'label':"Nom d'utilisateur"}) }}
+		{{ form_start(formComment) }}
+		{# {{ form_row(formComment.author, {'label':"Nom d'utilisateur"}) }} #}
 		{{ form_row(formComment.content, {'label':"Saisir votre commentaire"}) }}
 		<button type="submit" class="btn btn-dark">Poster le commentaire</button>
-	{{ form_end(formComment) }}
-
+		{{ form_end(formComment) }}
+	{% endif %}
 
 	<h4 class="mt-5 mb-3">Vos réactions...</h4>
 	<div class="row mb-5">
-		{% for data  in article.comments %}
+		{% for data  in article.comments |reverse %}
 
 			<div class="col-md-4 py-2">
 				<span>
@@ -75,5 +76,5 @@
 
 		{% endfor %}
 	</div>
-
+</div>
 {% endblock %}

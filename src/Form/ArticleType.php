@@ -16,7 +16,7 @@ class ArticleType extends AbstractType
         $builder
             ->add('title')
             // On ajoute le camp 'category au formulaire puisque nous devons relié notre article à une catégorie existante
-            // On précise de quelle entité provien le chmap"category".
+            // On précise de quelle entité provien le champ "category".
             ->add('category', EntityType::class, [
                 'class'=>Category::class,
                 'choice_label'=>'title'

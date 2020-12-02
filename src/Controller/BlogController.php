@@ -7,14 +7,10 @@ use App\Entity\Comment;
 use App\Form\ArticleType;
 use App\Form\CommentType;
 use App\Repository\ArticleRepository;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class BlogController extends AbstractController
@@ -25,7 +21,6 @@ class BlogController extends AbstractController
     // Lorsque nous envoyons la route '/blog' dans l'URL du navigateur,
     // Cela execute automatiquement dans le controller la méthode associé a celle-ci.
     // Chaque méthode renvoi un template sur le navigateur en fonction de la route transmise
-
     /**
      * @Route("/blog", name="blog")
      */
@@ -43,7 +38,6 @@ class BlogController extends AbstractController
             ]
         );
     }
-
     /**
      * @Route("/", name = "home")
      *  
@@ -58,13 +52,14 @@ class BlogController extends AbstractController
                 'age' => 30
             ]
         );
-    }
+    }    
     /**
      * @Route("/blog/new", name = "blog_create")
      * @Route("/blog/{id}/edit", name="blog_edit")
      */
 
     public function form(Article $article = null, Request $request, EntityManagerInterface $manager)
+
     {
             if (!$article) 
             {                
@@ -121,17 +116,23 @@ class BlogController extends AbstractController
 
     public function show(Article $article,Request $request, EntityManagerInterface $manager): Response
     {
-        // $repo = $this->getDoctrine()->getRepository(Article::class); // Injection de dépendance dans public function index() + $id 
-        // $article = $repo->find($id);
+        //// $repo = $this->getDoctrine()->getRepository(Article::class); // Injection de dépendance dans public function index() + $id 
+        //// $article = $repo->find($id);
         // // dump($article);
 
         $comment = new Comment;
-        dump($request);
+        //// dump($request);
+        //// $user = $this->getUser();
+        ////     dump($user);
 
         $formComment = $this->createForm(CommentType::class,$comment);
         $formComment->handleRequest($request);
         if ($formComment->isSubmitted() && $formComment-> isValid()) 
         {
+            $username = $this->getUser()->getUsername();
+            dump($username);
+
+            $comment->setAuthor($username);
             $comment-> setCreatedAt(new \DateTime);
             $comment->setArticle($article);
             $manager->persist($comment);
