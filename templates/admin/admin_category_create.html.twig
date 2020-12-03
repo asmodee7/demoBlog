@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+
+	<h1 class="display-4 text-center">
+		Back-Office | Gestion d'une catégorie
+	</h1>
+
+	{{form_start(formCategory,{'attr':{'class':'col-md-4 mx-auto'}})}}
+		{{form_row(formCategory.title, {'attr':{'placeholder':"Titre de la categorie"}})}}
+		{{form_row(formCategory.description, {'attr':{'placeholder':"Contenu de la categorie", "rows": 18}})}}
+		<button type="submit" class="btn btn-primary">Enregister</button>
+	{{form_end(formCategory)}}
+
+{% endblock %}

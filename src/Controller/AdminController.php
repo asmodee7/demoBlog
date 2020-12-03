@@ -3,8 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Article;
+use App\Entity\Category;
 use App\Form\ArticleType;
+use App\Form\CategoryType;
 use App\Repository\ArticleRepository;
+use App\Repository\CategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -42,13 +45,7 @@ class AdminController extends AbstractController
             'articles' => $articles
         ]);
     }
-    /**
-     * @Route("/admin/category", name="admin_category")
-     */
-    public function adminCategory(): Response
-    {
-        return $this->render('admin/admin_category.html.twig');
-    }
+
     /**
      * @Route("/admin/comment", name="admin_comment")
      */
@@ -78,6 +75,7 @@ class AdminController extends AbstractController
             5. Executer une redirection après insertion vers l'affichage des articles dans le Back-Office      
             6. Afficher un message de validation        
         */
+
         if (!$article) {
             $article = new Article;
         }
@@ -113,4 +111,89 @@ class AdminController extends AbstractController
             'formArticle' => $formArticle->createView()
         ]);
     }
+    /**
+     * @Route("/admin/category/new", name="admin_new_category")
+     * @Route("/admin/{id}/edit-category", name="admin_edit_category")
+     */
+    public function adminFormCategory(Request $request, EntityManagerInterface $manager, Category $category = null): Response
+    {
+
+        if (!$category) {
+            $category = new Category;
+        }
+
+        $formCategory = $this->createForm(CategoryType::class, $category);
+        $formCategory->handleRequest($request);
+        if ($formCategory->isSubmitted() && $formCategory->isValid()) {
+           
+            $manager->persist($category);
+            $manager->flush();
+
+
+            return $this->redirectToRoute('admin_category');
+        }
+
+
+
+        return $this->render('admin/admin_category_create.html.twig', [
+            'formCategory' => $formCategory->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/admin/{id}/delete-article", name="admin_delete_article")
+     */
+    public function deleteArticle(Article $article, EntityManagerInterface $manager){
+
+
+        $manager->remove($article);
+        $manager->flush();
+        $this->addFlash('Success',"l'article a bien été supprimé");
+        return $this -> redirectToRoute('admin_articles');
+
+    }
+
+    /**
+     * @Route("/admin/category", name="admin_category")
+     */
+    public function adminCategory(EntityManagerInterface $manager, CategoryRepository $repo): Response
+    {
+        $colonnes = $manager->getClassMetadata(Category::class)->getFieldNames();
+        // dump($colonnes);
+
+        $category = $repo->findAll();
+        dump($category);
+
+
+        return $this->render('admin/admin_category.html.twig', [
+            'colonnes' => $colonnes,
+            'category' => $category
+        ]);
+
+        
+    }
+
+    /**
+     * @Route("/admin/{id}/delete-category", name="admin_delete_category")
+     */
+    public function deleteCategory(Category $category, EntityManagerInterface $manager){
+
+        if ($category -> getArticles()->isEmpty())
+        {
+            $manager->remove($category);
+            $manager->flush();
+            $this->addFlash('success',"la catégorie a bien été supprimé");
+            
+
+        }
+        else
+        {
+            $this->addFlash('danger',"La catégorie ne peut pas être supprimé, des articles sont reliée a cette catégorie");
+        }
+        return $this -> redirectToRoute('admin_category');
+
+    }
+  
+
+ 
 }
